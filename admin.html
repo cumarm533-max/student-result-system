@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin — Student Results</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f6f8fb;margin:0;padding:24px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .card{background:white;padding:16px;border-radius:10px;box-shadow:0 10px 30px rgba(0,40,80,0.04)}
+  .grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+  input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #e6eefc}
+  button{padding:10px 12px;border-radius:8px;border:0;background:#2563eb;color:white;cursor:pointer}
+  button.ghost{background:transparent;color:#179e3d;border:1px solid rgba(37,99,235,0.12)}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{padding:8px;border-bottom:1px solid #f0f4fb;text-align:left}
+  .small{font-size:13px;color:#6b7280}
+  .actions button{margin-right:6px}
+  .download{margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Admin Panel</h1>
+    <div>
+      <a href="index.html"><button class="ghost">Open Student Login</button></a>
+      <button onclick="loadSample()">Load Sample Data</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Add / Edit Student</h3>
+      <div>
+        <label class="small">Name</label>
+        <input id="name" placeholder="Student full name" />
+        <label class="small">Student ID</label>
+        <input id="sid" placeholder="e.g. S001" />
+        <label class="small">Password</label>
+        <input id="pass" placeholder="6 character password" />
+        <div style="display:flex;gap:8px">
+          <button onclick="generatePassword()">Generate Password</button>
+          <button class="ghost" onclick="fillNextId()">Auto ID</button>
+        </div>
+
+        <label class="small">Math</label>
+        <input id="math" type="number" placeholder="Math marks" />
+        <label class="small">English</label>
+        <input id="english" type="number" placeholder="English marks" />
+        <label class="small">Science</label>
+        <input id="science" type="number" placeholder="Science marks" />
+
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button onclick="saveStudent()">Save Student</button>
+          <button class="ghost" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+
+      <div class="download">
+        <button onclick="downloadLoginList()">Download Login List (CSV)</button>
+        <button class="ghost" onclick="exportCSV()">Export Results CSV</button>
+        <button class="ghost" onclick="clearAll()">Clear All Data</button>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <h3>Students</h3>
+      <div class="small">Click a row to edit or view quick actions.</div>
+      <table border="2px" id="studentsTable">
+        <thead><tr><th>ID</th><th>Name</th><th>Pass</th><th>Total</th><th>Action</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'students_v1';
+
+function uidNumberFormat(n){
+  return 'S' + String(n).padStart(3,'0');
+}
+
+function getStudents(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveStudents(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  renderTable();
+}
+
+function renderTable(){
+  const tbody = document.querySelector('#studentsTable tbody');
+  const list = getStudents();
+  tbody.innerHTML = '';
+  list.forEach((s, i) => {
+    const total = ['math','english','science'].reduce((a,k)=> a + (Number(s[k])||0), 0);
+    tbody.innerHTML += `<tr>
+      <td>${s.id}</td>
+      <td>${s.name}</td>
+      <td>${s.pass}</td>
+      <td>${total}</td>
+      <td class="actions">
+        <button onclick="editStudent('${s.id}')">Edit</button>
+        <button class="ghost" onclick="deleteStudent('${s.id}')">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+
+function generatePassword(){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let p = '';
+  for(let i=0;i<6;i++) p += chars.charAt(Math.floor(Math.random()*chars.length));
+  document.getElementById('pass').value = p;
+}
+
+function fillNextId(){
+  const list = getStudents();
+  const next = list.length + 1;
+  document.getElementById('sid').value = uidNumberFormat(next);
+}
+
+function saveStudent(){
+  const name = document.getElementById('name').value.trim();
+  const id = document.getElementById('sid').value.trim();
+  const pass = document.getElementById('pass').value.trim();
+  const math = document.getElementById('math').value;
+  const english = document.getElementById('english').value;
+  const science = document.getElementById('science').value;
+
+  if(!name || !id || !pass){ alert('Name, ID and Password are required'); return; }
+
+  const list = getStudents();
+  const existing = list.findIndex(x=> x.id === id);
+  const student = {name, id, pass, math: Number(math)||0, english: Number(english)||0, science: Number(science)||0};
+
+  if(existing >= 0){
+    list[existing] = student;
+  } else {
+    list.push(student);
+  }
+  saveStudents(list);
+  resetForm();
+}
+
+function editStudent(id){
+  const list = getStudents();
+  const s = list.find(x=> x.id === id);
+  if(!s) return;
+  document.getElementById('name').value = s.name;
+  document.getElementById('sid').value = s.id;
+  document.getElementById('pass').value = s.pass;
+  document.getElementById('math').value = s.math;
+  document.getElementById('english').value = s.english;
+  document.getElementById('science').value = s.science;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function deleteStudent(id){
+  if(!confirm('Delete student '+id+'?')) return;
+  let list = getStudents().filter(x=> x.id !== id);
+  saveStudents(list);
+}
+
+function resetForm(){
+  document.getElementById('name').value = '';
+  document.getElementById('sid').value = '';
+  document.getElementById('pass').value = '';
+  document.getElementById('math').value = '';
+  document.getElementById('english').value = '';
+  document.getElementById('science').value = '';
+}
+
+function downloadLoginList(){
+  const list = getStudents();
+  if(!list.length){ alert('No students'); return; }
+  const rows = [['Name','ID','Password'], ...list.map(s=> [s.name, s.id, s.pass])];
+  const csv = rows.map(r=> r.map(c=> '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'login_list.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+function exportCSV(){
+  const list = getStudents();
+  if(!list.length){ alert('No students'); return; }
+  const rows = [['ID','Name','Math','English','Science','Total','Average','Result'],
+    ...list.map(s=>{
+      const total = (Number(s.math)||0) + (Number(s.english)||0) + (Number(s.science)||0);
+      const avg = total / 3;
+      const res = avg >= 50 ? 'PASS' : 'FAIL';
+      return [s.id,s.name,s.math,s.english,s.science,total,avg.toFixed(1),res];
+    })
+  ];
+  const csv = rows.map(r=> r.map(c=> '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'results.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+function clearAll(){
+  if(!confirm('Clear all students from local storage?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderTable();
+}
+
+function loadSample(){
+  const sample = [
+    {name:'Ali Mohamed',id:'S001',pass:'A7F9K2',math:80,english:75,science:90},
+    {name:'Amina Abdi',id:'S002',pass:'P4Q8Z1',math:78,english:82,science:88},
+    {name:'Ahmed Hassan',id:'S003',pass:'X9M2T7',math:68,english:70,science:72},
+    {name:'Hodan Ibrahim',id:'S004',pass:'L3C7P8',math:95,english:89,science:92},
+    {name:'Mohamed Yusuf',id:'S005',pass:'R8V5N4',math:60,english:58,science:64}
+  ];
+  saveStudents(sample);
+  alert('Loaded sample students. Use the Login link to test.');
+}
+
+// initial render
+renderTable();
+</script>
+</body>
+</html>

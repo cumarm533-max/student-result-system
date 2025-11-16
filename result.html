@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Result</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#eef2ff;margin:0;padding:30px;display:flex;justify-content:center}
+  .card{background:white;padding:22px;border-radius:10px;width:720px;box-shadow:0 12px 30px rgba(20,40,80,0.06)}
+  h2{margin:0 0 6px}
+  .info{display:flex;justify-content:space-between;margin-bottom:8px}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{padding:10px;border-bottom:1px solid #f0f4fb;text-align:left}
+  .right{text-align:right}
+  .actions{margin-top:12px;display:flex;gap:8px}
+  button{padding:8px 12px;border-radius:8px;border:0;background:#2563eb;color:white;cursor:pointer}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="info">
+      <div>
+        <h2 id="studentName">Student Name</h2>
+        <div id="studentId" class="small"></div>
+      </div>
+      <div class="right">
+        <div id="resultBadge"></div>
+        <div id="date" class="small"></div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Subject</th><th class="right">Marks</th></tr></thead>
+      <tbody id="marksBody"></tbody>
+      <tfoot>
+        <tr><th>Total</th><th id="total" class="right"></th></tr>
+        <tr><th>Average</th><th id="avg" class="right"></th></tr>
+      </tfoot>
+    </table>
+
+    <div class="actions">
+      <button onclick="printResult()">Print / Save PDF</button>
+      <button class="ghost" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+<script>
+function getStudents(){ try{ const s = localStorage.getItem('students_v1'); return s? JSON.parse(s):[] }catch(e){return[]} }
+function showNotFound(){ document.getElementById('studentName').textContent = 'Not Found'; document.getElementById('marksBody').innerHTML = '<tr><td colspan="2">Student not found or not logged in.</td></tr>'; }
+
+function render(){
+  const id = sessionStorage.getItem('loggedStudentId');
+  if(!id){ showNotFound(); return; }
+  const list = getStudents();
+  const st = list.find(x=> String(x.id) === String(id));
+  if(!st){ showNotFound(); return; }
+  document.getElementById('studentName').textContent = st.name;
+  document.getElementById('studentId').textContent = st.id;
+  const subjects = ['math','english','science'];
+  const tbody = document.getElementById('marksBody');
+  tbody.innerHTML = '';
+  let total = 0;
+  subjects.forEach(sub=>{
+    const val = Number(st[sub]) || 0;
+    total += val;
+    const label = sub.charAt(0).toUpperCase() + sub.slice(1);
+    tbody.innerHTML += `<tr><td>${label}</td><td class="right">${val}</td></tr>`;
+  });
+  const avg = (total / subjects.length) || 0;
+  document.getElementById('total').textContent = total;
+  document.getElementById('avg').textContent = avg.toFixed(1);
+  const badge = avg >= 50 ? '<span style="background:#ecfdf5;color:#059669;padding:6px 10px;border-radius:8px;font-weight:600">PASS</span>' : '<span style="background:#fff1f2;color:#dc2626;padding:6px 10px;border-radius:8px;font-weight:600">FAIL</span>';
+  document.getElementById('resultBadge').innerHTML = badge;
+  document.getElementById('date').textContent = new Date().toLocaleString();
+}
+
+function printResult(){ window.print(); }
+function logout(){ sessionStorage.removeItem('loggedStudentId'); window.location.href = 'index.html'; }
+
+render();
+</script>
+</body>
+</html>
