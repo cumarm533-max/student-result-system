@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Results — Login</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;margin:0;padding:0;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:white;padding:22px;border-radius:10px;box-shadow:0 10px 30px rgba(20,40,80,0.08);width:360px}
+  h2{margin:0 0 8px;font-size:20px}
+  input{width:100%;padding:10px;margin:8px 0;border:1px solid #e6eefc;border-radius:8px}
+  button{width:100%;padding:10px;border-radius:8px;border:0;background:#2563eb;color:white;font-weight:600}
+  .muted{font-size:13px;color:#6b7280;margin-top:8px;text-align:center}
+  .small{font-size:13px;color:#374151}
+  .link-row{display:flex;justify-content:space-between;margin-top:10px}
+  .ghost{background:transparent;color:#2563eb;border:1px solid rgba(37,99,235,0.12);width:auto;padding:8px 12px;border-radius:8px}
+</style>
+</head>
+<body>
+  <div class= "card">
+    <h2>Student Login</h2>
+    <p class="small">Use the ID and password provided by your school.</p>
+    <input id="studentId" placeholder="Use Your ID" />
+    <input id="studentPass" placeholder="Password" type="password" />
+    <button onclick="login()">Login</button>
+    <div class="link-row">
+      <button class="ghost" onclick="showExample()"></button>
+      <button class="ghost" onclick="clearSession()">Clear</button>
+    </div>
+    <div class="muted" id="msg"></div>
+  </div>
+
+<script>
+function getStudents(){
+  try{
+    const raw = localStorage.getItem('students_v1');
+    return raw? JSON.parse(raw) : [];
+  }catch(e){ return [];}
+}
+
+function login(){
+  const id = document.getElementById('studentId').value.trim();
+  const pass = document.getElementById('studentPass').value.trim();
+  const msg = document.getElementById('msg');
+  msg.textContent = '';
+  if(!id || !pass){ msg.textContent = 'Enter both ID and password.'; return; }
+  const students = getStudents();
+  const found = students.find(s => String(s.id) === String(id) && String(s.pass) === String(pass));
+  if(!found){ msg.textContent = 'Incorrect ID or password.'; return; }
+  // set session marker and redirect to result page
+  sessionStorage.setItem('loggedStudentId', found.id);
+  window.location.href = 'result.html';
+}
+
+function showExample(){
+  alert('Sample ID: S001\nSample password: A7F9K2\n(These are in the sample data if you loaded the system.)');
+}
+
+function clearSession(){
+  sessionStorage.removeItem('loggedStudentId');
+  document.getElementById('studentId').value = '';
+  document.getElementById('studentPass').value = '';
+  document.getElementById('msg').textContent = 'Cleared.';
+}
+</script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Results — Login</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;margin:0;padding:0;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:white;padding:22px;border-radius:10px;box-shadow:0 10px 30px rgba(20,40,80,0.08);width:360px}
+  h2{margin:0 0 8px;font-size:20px}
+  input{width:100%;padding:10px;margin:8px 0;border:1px solid #e6eefc;border-radius:8px}
+  button{width:100%;padding:10px;border-radius:8px;border:0;background:#2563eb;color:white;font-weight:600}
+  .muted{font-size:13px;color:#6b7280;margin-top:8px;text-align:center}
+  .small{font-size:13px;color:#374151}
+  .link-row{display:flex;justify-content:space-between;margin-top:10px}
+  .ghost{background:transparent;color:#2563eb;border:1px solid rgba(37,99,235,0.12);width:auto;padding:8px 12px;border-radius:8px}
+</style>
+</head>
+<body>
+  <div class= "card">
+    <h2>Student Login</h2>
+    <p class="small">Use the ID and password provided by your school.</p>
+    <input id="studentId" placeholder="Use Your ID" />
+    <input id="studentPass" placeholder="Password" type="password" />
+    <button onclick="login()">Login</button>
+    <div class="link-row">
+      <button class="ghost" onclick="showExample()"></button>
+      <button class="ghost" onclick="clearSession()">Clear</button>
+    </div>
+    <div class="muted" id="msg"></div>
+  </div>
+
+<script>
+function getStudents(){
+  try{
+    const raw = localStorage.getItem('students_v1');
+    return raw? JSON.parse(raw) : [];
+  }catch(e){ return [];}
+}
+
+function login(){
+  const id = document.getElementById('studentId').value.trim();
+  const pass = document.getElementById('studentPass').value.trim();
+  const msg = document.getElementById('msg');
+  msg.textContent = '';
+  if(!id || !pass){ msg.textContent = 'Enter both ID and password.'; return; }
+  const students = getStudents();
+  const found = students.find(s => String(s.id) === String(id) && String(s.pass) === String(pass));
+  if(!found){ msg.textContent = 'Incorrect ID or password.'; return; }
+  // set session marker and redirect to result page
+  sessionStorage.setItem('loggedStudentId', found.id);
+  window.location.href = 'result.html';
+}
+
+function showExample(){
+  alert('Sample ID: S001\nSample password: A7F9K2\n(These are in the sample data if you loaded the system.)');
+}
+
+function clearSession(){
+  sessionStorage.removeItem('loggedStudentId');
+  document.getElementById('studentId').value = '';
+  document.getElementById('studentPass').value = '';
+  document.getElementById('msg').textContent = 'Cleared.';
+}
+</script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Results — Login</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;margin:0;padding:0;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:white;padding:22px;border-radius:10px;box-shadow:0 10px 30px rgba(20,40,80,0.08);width:360px}
+  h2{margin:0 0 8px;font-size:20px}
+  input{width:100%;padding:10px;margin:8px 0;border:1px solid #e6eefc;border-radius:8px}
+  button{width:100%;padding:10px;border-radius:8px;border:0;background:#2563eb;color:white;font-weight:600}
+  .muted{font-size:13px;color:#6b7280;margin-top:8px;text-align:center}
+  .small{font-size:13px;color:#374151}
+  .link-row{display:flex;justify-content:space-between;margin-top:10px}
+  .ghost{background:transparent;color:#2563eb;border:1px solid rgba(37,99,235,0.12);width:auto;padding:8px 12px;border-radius:8px}
+</style>
+</head>
+<body>
+  <div class= "card">
+    <h2>Student Login</h2>
+    <p class="small">Use the ID and password provided by your school.</p>
+    <input id="studentId" placeholder="Use Your ID" />
+    <input id="studentPass" placeholder="Password" type="password" />
+    <button onclick="login()">Login</button>
+    <div class="link-row">
+      <button class="ghost" onclick="showExample()"></button>
+      <button class="ghost" onclick="clearSession()">Clear</button>
+    </div>
+    <div class="muted" id="msg"></div>
+  </div>
+
+<script>
+function getStudents(){
+  try{
+    const raw = localStorage.getItem('students_v1');
+    return raw? JSON.parse(raw) : [];
+  }catch(e){ return [];}
+}
+
+function login(){
+  const id = document.getElementById('studentId').value.trim();
+  const pass = document.getElementById('studentPass').value.trim();
+  const msg = document.getElementById('msg');
+  msg.textContent = '';
+  if(!id || !pass){ msg.textContent = 'Enter both ID and password.'; return; }
+  const students = getStudents();
+  const found = students.find(s => String(s.id) === String(id) && String(s.pass) === String(pass));
+  if(!found){ msg.textContent = 'Incorrect ID or password.'; return; }
+  // set session marker and redirect to result page
+  sessionStorage.setItem('loggedStudentId', found.id);
+  window.location.href = 'result.html';
+}
+
+function showExample(){
+  alert('Sample ID: S001\nSample password: A7F9K2\n(These are in the sample data if you loaded the system.)');
+}
+
+function clearSession(){
+  sessionStorage.removeItem('loggedStudentId');
+  document.getElementById('studentId').value = '';
+  document.getElementById('studentPass').value = '';
+  document.getElementById('msg').textContent = 'Cleared.';
+}
+</script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Results — Login</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f3f6fb;margin:0;padding:0;display:flex;align-items:center;justify-content:center;height:100vh}
+  .card{background:white;padding:22px;border-radius:10px;box-shadow:0 10px 30px rgba(20,40,80,0.08);width:360px}
+  h2{margin:0 0 8px;font-size:20px}
+  input{width:100%;padding:10px;margin:8px 0;border:1px solid #e6eefc;border-radius:8px}
+  button{width:100%;padding:10px;border-radius:8px;border:0;background:#2563eb;color:white;font-weight:600}
+  .muted{font-size:13px;color:#6b7280;margin-top:8px;text-align:center}
+  .small{font-size:13px;color:#374151}
+  .link-row{display:flex;justify-content:space-between;margin-top:10px}
+  .ghost{background:transparent;color:#2563eb;border:1px solid rgba(37,99,235,0.12);width:auto;padding:8px 12px;border-radius:8px}
+</style>
+</head>
+<body>
+  <div class= "card">
+    <h2>Student Login</h2>
+    <p class="small">Use the ID and password provided by your school.</p>
+    <input id="studentId" placeholder="Use Your ID" />
+    <input id="studentPass" placeholder="Password" type="password" />
+    <button onclick="login()">Login</button>
+    <div class="link-row">
+      <button class="ghost" onclick="showExample()"></button>
+      <button class="ghost" onclick="clearSession()">Clear</button>
+    </div>
+    <div class="muted" id="msg"></div>
+  </div>
+
+<script>
+function getStudents(){
+  try{
+    const raw = localStorage.getItem('students_v1');
+    return raw? JSON.parse(raw) : [];
+  }catch(e){ return [];}
+}
+
+function login(){
+  const id = document.getElementById('studentId').value.trim();
+  const pass = document.getElementById('studentPass').value.trim();
+  const msg = document.getElementById('msg');
+  msg.textContent = '';
+  if(!id || !pass){ msg.textContent = 'Enter both ID and password.'; return; }
+  const students = getStudents();
+  const found = students.find(s => String(s.id) === String(id) && String(s.pass) === String(pass));
+  if(!found){ msg.textContent = 'Incorrect ID or password.'; return; }
+  // set session marker and redirect to result page
+  sessionStorage.setItem('loggedStudentId', found.id);
+  window.location.href = 'result.html';
+}
+
+function showExample(){
+  alert('Sample ID: S001\nSample password: A7F9K2\n(These are in the sample data if you loaded the system.)');
+}
+
+function clearSession(){
+  sessionStorage.removeItem('loggedStudentId');
+  document.getElementById('studentId').value = '';
+  document.getElementById('studentPass').value = '';
+  document.getElementById('msg').textContent = 'Cleared.';
+}
+</script>
+</body>
+</html>
+<!doctype html>1
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin — Student Results</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#f6f8fb;margin:0;padding:24px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .card{background:rgba(355, 255, 255, 0.321);padding:16px;border-radius:0px;box-shadow:0 10px 30px rgba(0,50,80,0.04)}
+  .grid{display:grid;grid-template-columns:1fr 320px;gap:16px}
+  input,select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid #e6eefc}
+  button{padding:10px 12px;border-radius:8px;border:0;background:#064ce3;color:white;cursor:pointer}
+  button.ghost{background:transparent;color:#179e3d;border:1px solid rgba(37,99,235,0.12)}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{padding:8px;border-bottom:1px solid #0852d1;text-align:left}
+  .small{font-size:13px;color:#3d434e}
+  .actions button{margin-right:6px}
+  .download{margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Admin Panel</h1>
+    <div>
+      <a href="index.html"><button class="ghost">Open Student Login</button></a>
+      <button onclick="loadSample()">Load Sample Data</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Add / Edit Student</h3>
+      <div>
+        <label class="small">Name</label>
+        <input id="name" placeholder="Student full name" />
+        <label class="small">Student ID</label>
+        <input id="sid" placeholder="e.g. S001" />
+        <label class="small">Password</label>
+        <input id="pass" placeholder="6 character password" />
+        <div style="display:flex;gap:8px">
+          <button onclick="generatePassword()">Generate Password</button>
+          <button class="ghost" onclick="fillNextId()">Auto ID</button>
+        </div>
+
+        <label class="small">Math</label>
+        <input id="math" type="number" placeholder="Math marks" />
+        <label class="small">English</label>
+        <input id="english" type="number" placeholder="English marks" />
+        <label class="small">Science</label>
+        <input id="science" type="number" placeholder="Science marks" />
+
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <button onclick="saveStudent()">Save Student</button>
+          <button class="ghost" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+
+      <div class="download">
+        <button onclick="downloadLoginList()">Download Login List (CSV)</button>
+        <button class="ghost" onclick="exportCSV()">Export Results CSV</button>
+        <button class="ghost" onclick="clearAll()">Clear All Data</button>
+      </div>
+
+    </div>
+
+    <div classes="card" class="card">
+      <h3>Students</h3>
+      <div class="small">Click a row to edit or view quick actions.</div>
+      <table id="studentsTable">
+        <thead><tr><th>ID</th><th>Name</th><th>Pass</th><th>Total</th><th>Action</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script >
+const STORAGE_KEY = 'students_v1';
+
+function uidNumberFormat(n){
+  return 'S' + String(n).padStart(3,'0');
+}
+
+function getStudents(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveStudents(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  renderTable();
+}
+
+function renderTable(){
+  const tbody = document.querySelector('#studentsTable tbody');
+  const list = getStudents();
+  tbody.innerHTML = '';
+  list.forEach((s, i) => {
+    const total = ['math','english','science'].reduce((a,k)=> a + (Number(s[k])||0), 0);
+    tbody.innerHTML += `<tr>
+      <td>${s.id}</td>
+      <td>${s.name}</td>
+      <td>${s.pass}</td>
+      <td>${total}</td>
+      <td class="actions">
+        <button onclick="editStudent('${s.id}')">Edit</button>
+        <button class="ghost" onclick="deleteStudent('${s.id}')">Delete</button>
+      </td>
+    </tr>`;
+  });
+}
+
+function generatePassword(){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let p = '';
+  for(let i=0;i<6;i++) p += chars.charAt(Math.floor(Math.random()*chars.length));
+  document.getElementById('pass').value = p;
+}
+
+function fillNextId(){
+  const list = getStudents();
+  const next = list.length + 1;
+  document.getElementById('sid').value = uidNumberFormat(next);
+}
+
+function saveStudent(){
+  const name = document.getElementById('name').value.trim();
+  const id = document.getElementById('sid').value.trim();
+  const pass = document.getElementById('pass').value.trim();
+  const math = document.getElementById('math').value;
+  const english = document.getElementById('english').value;
+  const science = document.getElementById('science').value;
+
+  if(!name || !id || !pass){ alert('Name, ID and Password are required'); return; }
+
+  const list = getStudents();
+  const existing = list.findIndex(x=> x.id === id);
+  const student = {name, id, pass, math: Number(math)||0, english: Number(english)||0, science: Number(science)||0};
+
+  if(existing >= 0){
+    list[existing] = student;
+  } else {
+    list.push(student);
+  }
+  saveStudents(list);
+  resetForm();
+}
+
+function editStudent(id){
+  const list = getStudents();
+  const s = list.find(x=> x.id === id);
+  if(!s) return;
+  document.getElementById('name').value = s.name;
+  document.getElementById('sid').value = s.id;
+  document.getElementById('pass').value = s.pass;
+  document.getElementById('math').value = s.math;
+  document.getElementById('english').value = s.english;
+  document.getElementById('science').value = s.science;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function deleteStudent(id){
+  if(!confirm('Delete student '+id+'?')) return;
+  let list = getStudents().filter(x=> x.id !== id);
+  saveStudents(list);
+}
+
+function resetForm(){
+  document.getElementById('name').value = '';
+  document.getElementById('sid').value = '';
+  document.getElementById('pass').value = '';
+  document.getElementById('math').value = '';
+  document.getElementById('english').value = '';
+  document.getElementById('science').value = '';
+}
+
+function downloadLoginList(){
+  const list = getStudents();
+  if(!list.length){ alert('No students'); return; }
+  const rows = [['Name','ID','Password'], ...list.map(s=> [s.name, s.id, s.pass])];
+  const csv = rows.map(r=> r.map(c=> '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'login_list.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+function exportCSV(){
+  const list = getStudents();
+  if(!list.length){ alert('No students'); return; }
+  const rows = [['ID','Name','Math','English','Science','Total','Average','Result'],
+    ...list.map(s=>{
+      const total = (Number(s.math)||0) + (Number(s.english)||0) + (Number(s.science)||0);
+      const avg = total / 3;
+      const res = avg >= 50 ? 'PASS' : 'FAIL';
+      return [s.id,s.name,s.math,s.english,s.science,total,avg.toFixed(1),res];
+    })
+  ];
+  const csv = rows.map(r=> r.map(c=> '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'results.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+function clearAll(){
+  if(!confirm('Clear all students from local storage?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  renderTable();
+}
+
+function loadSample(){
+  const sample = [
+    {name:'Asli Mohamed',id:'S001',pass:'A7F9K2',math:80,english:75,science:90},
+    {name:'Amina Abdi',id:'S002',pass:'P4Q8Z1',math:78,english:82,science:88},
+    {name:'Ahmed Hassan',id:'S003',pass:'X9M2T7',math:68,english:70,science:72},
+    {name:'Hodan Ibrahim',id:'S004',pass:'L3C7P8',math:95,english:89,science:92},
+    {name:'Mohamed Yusuf',id:'S005',pass:'R8V5N4',math:60,english:58,science:64}
+  ];
+  saveStudents(sample);
+  alert('Loaded sample students. Use the Login link to test.');
+}
+
+// initial render
+renderTable();
+</script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Student Result</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;background:#eef2ff;margin:0;padding:30px;display:flex;justify-content:center}
+  .card{background:white;padding:22px;border-radius:10px;width:720px;box-shadow:0 12px 30px rgba(20,40,80,0.06)}
+  h2{margin:0 0 6px}
+  .info{display:flex;justify-content:space-between;margin-bottom:8px}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{padding:10px;border-bottom:1px solid #f0f4fb;text-align:left}
+  .right{text-align:right}
+  .actions{margin-top:12px;display:flex;gap:8px}
+  button{padding:8px 12px;border-radius:8px;border:0;background:#2563eb;color:white;cursor:pointer}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="info">
+      <div>
+        <h2 id="studentName">Student Name</h2>
+        <div id="studentId" class="small"></div>
+      </div>
+      <div class="right">
+        <div id="resultBadge"></div>
+        <div id="date" class="small"></div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Subject</th><th class="right">Marks</th></tr></thead>
+      <tbody id="marksBody"></tbody>
+      <tfoot>
+        <tr><th>Total</th><th id="total" class="right"></th></tr>
+        <tr><th>Average</th><th id="avg" class="right"></th></tr>
+      </tfoot>
+    </table>
+
+    <div class="actions">
+      <button onclick="printResult()">Print / Save PDF</button>
+      <button class="ghost" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+<script>
+function getStudents(){ try{ const s = localStorage.getItem('students_v1'); return s? JSON.parse(s):[] }catch(e){return[]} }
+function showNotFound(){ document.getElementById('studentName').textContent = 'Not Found'; document.getElementById('marksBody').innerHTML = '<tr><td colspan="2">Student not found or not logged in.</td></tr>'; }
+
+function render(){
+  const id = sessionStorage.getItem('loggedStudentId');
+  if(!id){ showNotFound(); return; }
+  const list = getStudents();
+  const st = list.find(x=> String(x.id) === String(id));
+  if(!st){ showNotFound(); return; }
+  document.getElementById('studentName').textContent = st.name;
+  document.getElementById('studentId').textContent = st.id;
+  const subjects = ['math','english','science'];
+  const tbody = document.getElementById('marksBody');
+  tbody.innerHTML = '';
+  let total = 0;
+  subjects.forEach(sub=>{
+    const val = Number(st[sub]) || 0;
+    total += val;
+    const label = sub.charAt(0).toUpperCase() + sub.slice(1);
+    tbody.innerHTML += `<tr><td>${label}</td><td class="right">${val}</td></tr>`;
+  });
+  const avg = (total / subjects.length) || 0;
+  document.getElementById('total').textContent = total;
+  document.getElementById('avg').textContent = avg.toFixed(1);
+  const badge = avg >= 50 ? '<span style="background:#ecfdf5;color:#059669;padding:6px 10px;border-radius:8px;font-weight:600">PASS</span>' : '<span style="background:#fff1f2;color:#dc2626;padding:6px 10px;border-radius:8px;font-weight:600">FAIL</span>';
+  document.getElementById('resultBadge').innerHTML = badge;
+  document.getElementById('date').textContent = new Date().toLocaleString();
+}
+
+function printResult(){ window.print(); }
+function logout(){ sessionStorage.removeItem('loggedStudentId'); window.location.href = 'index.html'; }
+
+render();
+</script>
+</body>
+</html>
+
